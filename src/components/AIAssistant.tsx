@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { aiParentInformationTool } from '@/ai/flows/ai-parent-information-tool'
 import { Sparkles, MessageCircle, Send, Loader2 } from 'lucide-react'
+import { Conversation } from './Conversation'
 
 export function AIAssistant() {
   const [question, setQuestion] = useState('')
@@ -43,6 +44,9 @@ export function AIAssistant() {
               </CardDescription>
             </CardHeader>
             <CardContent className="p-8">
+
+              <Conversation />
+
               <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                 <div className="relative">
                   <Input 
@@ -61,6 +65,8 @@ export function AIAssistant() {
                   </Button>
                 </div>
               </form>
+
+              
 
               {(answer || loading) && (
                 <div className="mt-8 p-6 rounded-3xl bg-secondary/5 border-2 border-secondary/10 animate-in fade-in slide-in-from-bottom-4 duration-500">
