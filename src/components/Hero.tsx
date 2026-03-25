@@ -10,7 +10,7 @@ export function Hero() {
   const heroImage = PlaceHolderImages.find(img => img.id === 'hero-play')
 
   return (
-    <section className="relative pt-32 pb-20 overflow-hidden">
+    <section className="relative pt-40 pb-20 overflow-hidden">
       <div className="container mx-auto px-4 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
         
         {/* Left Side: Text */}
