@@ -1,4 +1,3 @@
-
 "use client"
 
 import { useState } from 'react'
@@ -13,22 +12,41 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Heart, ArrowLeft, Star, Sparkles } from 'lucide-react'
 import Link from 'next/link'
 import { useToast } from '@/hooks/use-toast'
+import { submitEnrollmentAction } from '@/app/actions/enroll'
 
 export default function EnrollPage() {
   const { toast } = useToast()
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [preferredContact, setPreferredContact] = useState('')
+  const [careType, setCareType] = useState('')
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsSubmitting(true)
-    // Simulate submission
-    setTimeout(() => {
-      setIsSubmitting(false)
+
+    const formData = new FormData(e.currentTarget)
+    // Add select values manually since Radix Select doesn't use native name attribute easily
+    formData.append('preferredContact', preferredContact)
+    formData.append('careType', careType)
+
+    const result = await submitEnrollmentAction(formData)
+
+    setIsSubmitting(false)
+
+    if (result.success) {
       toast({
         title: "Inquiry Sent!",
         description: "We've received your enrollment request. We'll be in touch soon!",
       })
-    }, 1500)
+      // Optional: Reset form or redirect
+      e.currentTarget.reset()
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Submission Failed",
+        description: result.error || "There was a problem sending your inquiry. Please try again.",
+      })
+    }
   }
 
   return (
@@ -73,19 +91,19 @@ export default function EnrollPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-2">
                         <Label htmlFor="parentName" className="font-bold ml-1">Full Name</Label>
-                        <Input id="parentName" required placeholder="John or Jane Doe" className="rounded-2xl h-12 border-primary/10 focus-visible:ring-primary" />
+                        <Input name="parentName" id="parentName" required placeholder="John or Jane Doe" className="rounded-2xl h-12 border-primary/10 focus-visible:ring-primary" />
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="email" className="font-bold ml-1">Email Address</Label>
-                        <Input id="email" type="email" required placeholder="email@example.com" className="rounded-2xl h-12 border-primary/10 focus-visible:ring-primary" />
+                        <Input name="email" id="email" type="email" required placeholder="email@example.com" className="rounded-2xl h-12 border-primary/10 focus-visible:ring-primary" />
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="phone" className="font-bold ml-1">Phone Number</Label>
-                        <Input id="phone" type="tel" required placeholder="(403) 555-0123" className="rounded-2xl h-12 border-primary/10 focus-visible:ring-primary" />
+                        <Input name="phone" id="phone" type="tel" required placeholder="(403) 555-0123" className="rounded-2xl h-12 border-primary/10 focus-visible:ring-primary" />
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="preferredContact" className="font-bold ml-1">Preferred Contact Method</Label>
-                        <Select>
+                        <Select onValueChange={setPreferredContact}>
                           <SelectTrigger id="preferredContact" className="rounded-2xl h-12 border-primary/10">
                             <SelectValue placeholder="Select one" />
                           </SelectTrigger>
@@ -108,19 +126,19 @@ export default function EnrollPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-2">
                         <Label htmlFor="childName" className="font-bold ml-1">Child's Name</Label>
-                        <Input id="childName" required placeholder="Child's full name" className="rounded-2xl h-12 border-primary/10 focus-visible:ring-primary" />
+                        <Input name="childName" id="childName" required placeholder="Child's full name" className="rounded-2xl h-12 border-primary/10 focus-visible:ring-primary" />
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="childAge" className="font-bold ml-1">Child's Age / DOB</Label>
-                        <Input id="childAge" required placeholder="e.g. 18 months or Jan 15, 2023" className="rounded-2xl h-12 border-primary/10 focus-visible:ring-primary" />
+                        <Input name="childAge" id="childAge" required placeholder="e.g. 18 months or Jan 15, 2023" className="rounded-2xl h-12 border-primary/10 focus-visible:ring-primary" />
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="startDate" className="font-bold ml-1">Desired Start Date</Label>
-                        <Input id="startDate" type="date" required className="rounded-2xl h-12 border-primary/10 focus-visible:ring-primary" />
+                        <Input name="startDate" id="startDate" type="date" required className="rounded-2xl h-12 border-primary/10 focus-visible:ring-primary" />
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="careType" className="font-bold ml-1">Type of Care Needed</Label>
-                        <Select>
+                        <Select onValueChange={setCareType}>
                           <SelectTrigger id="careType" className="rounded-2xl h-12 border-primary/10">
                             <SelectValue placeholder="Select frequency" />
                           </SelectTrigger>
@@ -139,6 +157,7 @@ export default function EnrollPage() {
                   <div className="space-y-4 pt-4">
                     <Label htmlFor="message" className="font-bold ml-1">Additional Information or Questions</Label>
                     <Textarea 
+                      name="message"
                       id="message" 
                       placeholder="Tell us about your child's personality, routines, allergies, or any specific questions you have." 
                       className="rounded-3xl min-h-[150px] border-primary/10 focus-visible:ring-primary" 
