@@ -2,6 +2,7 @@
 "use client"
 
 import Image from 'next/image'
+import Link from 'next/link'
 import { PlaceHolderImages } from '@/lib/placeholder-images'
 import { Button } from '@/components/ui/button'
 import { DoodleDecor, SwirlDoodle } from './DoodleDecor'
@@ -26,11 +27,11 @@ export function Hero() {
             A nurturing, play-based home daycare where every child is encouraged to thrive through exploration, discovery, and individualized attention.
           </p>
           <div className="flex flex-wrap gap-4">
-            <Button size="lg" className="rounded-full bg-primary hover:bg-primary/90 text-white font-bold px-8 py-6 text-lg shadow-lg">
-              Visit Us Today
+            <Button size="lg" className="rounded-full bg-primary hover:bg-primary/90 text-white font-bold px-8 py-6 text-lg shadow-lg" asChild>
+              <Link href="#contact">Visit Us Today</Link>
             </Button>
-            <Button size="lg" variant="outline" className="rounded-full border-2 border-secondary text-secondary hover:bg-secondary/10 font-bold px-8 py-6 text-lg">
-              Our Philosophy
+            <Button size="lg" variant="outline" className="rounded-full border-2 border-secondary text-secondary hover:bg-secondary/10 font-bold px-8 py-6 text-lg" asChild>
+              <Link href="/enroll">Enroll Now</Link>
             </Button>
           </div>
           

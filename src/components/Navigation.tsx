@@ -1,3 +1,4 @@
+
 "use client"
 
 import Link from 'next/link'
@@ -22,11 +23,11 @@ export function Navigation() {
   }, [])
 
   const navLinks = [
-    { name: 'About', href: '#about' },
-    { name: 'Programs', href: '#programs' },
-    { name: 'Gallery', href: '#gallery' },
-    { name: 'AI Assistant', href: '#ai-tool' },
-    { name: 'Contact', href: '#contact' },
+    { name: 'About', href: '/#about' },
+    { name: 'Programs', href: '/#programs' },
+    { name: 'Gallery', href: '/#gallery' },
+    { name: 'AI Assistant', href: '/#ai-tool' },
+    { name: 'Contact', href: '/#contact' },
   ]
 
   return (
@@ -96,8 +97,8 @@ export function Navigation() {
                 {link.name}
               </Link>
             ))}
-            <Button className="rounded-full bg-primary hover:bg-primary/90 text-white font-bold px-6">
-              Enroll Now
+            <Button className="rounded-full bg-primary hover:bg-primary/90 text-white font-bold px-6" asChild>
+              <Link href="/enroll">Enroll Now</Link>
             </Button>
           </div>
 
@@ -120,8 +121,8 @@ export function Navigation() {
                 {link.name}
               </Link>
             ))}
-            <Button className="w-full rounded-full bg-primary hover:bg-primary/90 text-white font-bold">
-              Enroll Now
+            <Button className="w-full rounded-full bg-primary hover:bg-primary/90 text-white font-bold" asChild>
+              <Link href="/enroll">Enroll Now</Link>
             </Button>
           </div>
         )}
