@@ -1,7 +1,7 @@
 
 "use client"
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
@@ -20,6 +20,11 @@ export function AIAssistant() {
   const [question, setQuestion] = useState('')
   const [answer, setAnswer] = useState('')
   const [loading, setLoading] = useState(false)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -53,29 +58,36 @@ export function AIAssistant() {
             <CardContent className="p-8">
 
               <div className="flex justify-center mb-8">
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button variant="outline" className="rounded-full border-2 border-primary text-primary hover:bg-primary/10 font-bold px-8 py-6 h-auto transition-all hover:scale-105">
-                      <Mic className="mr-2" size={20} />
-                      Try Voice Conversation
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-[500px] border-none bg-transparent shadow-none p-0">
-                    <div className="bg-white rounded-[3rem] p-8 shadow-2xl overflow-hidden border-4 border-primary/20 relative">
-                      <div className="absolute -top-12 -right-12 w-24 h-24 bg-yellow/20 rounded-full blur-2xl" />
-                      <div className="absolute -bottom-12 -left-12 w-32 h-32 bg-teal/10 rounded-full blur-2xl" />
-                      
-                      <DialogHeader className="mb-6 relative z-10">
-                        <DialogTitle className="font-headline text-3xl text-primary text-center">AI Receptionist</DialogTitle>
-                        <p className="text-center text-sm text-foreground/60 font-medium">Ask us anything about enrollment, programs, or hours!</p>
-                      </DialogHeader>
-                      
-                      <div className="relative z-10">
-                        <Conversation />
+                {mounted ? (
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button variant="outline" className="rounded-full border-2 border-primary text-primary hover:bg-primary/10 font-bold px-8 py-6 h-auto transition-all hover:scale-105">
+                        <Mic className="mr-2" size={20} />
+                        Try Voice Conversation
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[500px] border-none bg-transparent shadow-none p-0">
+                      <div className="bg-white rounded-[3rem] p-8 shadow-2xl overflow-hidden border-4 border-primary/20 relative">
+                        <div className="absolute -top-12 -right-12 w-24 h-24 bg-yellow/20 rounded-full blur-2xl" />
+                        <div className="absolute -bottom-12 -left-12 w-32 h-32 bg-teal/10 rounded-full blur-2xl" />
+                        
+                        <DialogHeader className="mb-6 relative z-10">
+                          <DialogTitle className="font-headline text-3xl text-primary text-center">AI Receptionist</DialogTitle>
+                          <p className="text-center text-sm text-foreground/60 font-medium">Ask us anything about enrollment, programs, or hours!</p>
+                        </DialogHeader>
+                        
+                        <div className="relative z-10">
+                          <Conversation />
+                        </div>
                       </div>
-                    </div>
-                  </DialogContent>
-                </Dialog>
+                    </DialogContent>
+                  </Dialog>
+                ) : (
+                  <Button variant="outline" disabled className="rounded-full border-2 border-primary/20 text-primary/40 font-bold px-8 py-6 h-auto">
+                    <Mic className="mr-2" size={20} />
+                    Try Voice Conversation
+                  </Button>
+                )}
               </div>
 
               <div className="relative mb-6">

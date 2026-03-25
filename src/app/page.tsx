@@ -31,7 +31,7 @@ export default function Home() {
             <span>in Calgary, Alberta</span>
           </div>
           <div className="text-foreground/30 text-xs">
-            © {new Date().getFullYear()} Calgary DayHome Connect. All Rights Reserved.
+            © 2025 Calgary DayHome Connect. All Rights Reserved.
           </div>
         </div>
       </footer>
