@@ -1,4 +1,3 @@
-
 "use client"
 
 import Link from 'next/link'
@@ -52,17 +51,17 @@ export function Navigation() {
                   Speak Now
                 </button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-[500px] border-none bg-transparent shadow-none p-0">
-                <div className="bg-white rounded-[3rem] p-8 shadow-2xl overflow-hidden border-4 border-primary/20 relative">
-                  <div className="absolute -top-12 -right-12 w-24 h-24 bg-yellow/20 rounded-full blur-2xl" />
-                  <div className="absolute -bottom-12 -left-12 w-32 h-32 bg-teal/10 rounded-full blur-2xl" />
+              <DialogContent className="sm:max-w-[550px] border-none bg-transparent shadow-none p-0">
+                <div className="bg-white rounded-[3.5rem] p-10 md:p-12 shadow-2xl overflow-hidden border-4 border-primary/20 relative flex flex-col items-center justify-center min-h-[500px]">
+                  <div className="absolute -top-12 -right-12 w-32 h-32 bg-yellow/20 rounded-full blur-3xl" />
+                  <div className="absolute -bottom-12 -left-12 w-40 h-40 bg-teal/10 rounded-full blur-3xl" />
                   
-                  <DialogHeader className="mb-6 relative z-10">
-                    <DialogTitle className="font-headline text-3xl text-primary text-center">AI Receptionist</DialogTitle>
-                    <p className="text-center text-sm text-foreground/60 font-medium">Ask us anything about enrollment, programs, or hours!</p>
+                  <DialogHeader className="mb-8 relative z-10 w-full">
+                    <DialogTitle className="font-headline text-4xl text-primary text-center">AI Receptionist</DialogTitle>
+                    <p className="text-center text-base text-foreground/60 font-medium mt-2 max-w-[280px] mx-auto">Ask us anything about enrollment, programs, or hours!</p>
                   </DialogHeader>
                   
-                  <div className="relative z-10">
+                  <div className="relative z-10 w-full flex justify-center">
                     <Conversation />
                   </div>
                 </div>
