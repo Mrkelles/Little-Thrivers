@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useState } from 'react'
@@ -50,7 +51,7 @@ export default function EnrollPage() {
   }
 
   return (
-    <main className="min-h-screen bg-background selection:bg-primary/30">
+    <main className="min-h-screen bg-background selection:bg-primary/30 overflow-x-hidden">
       <Navigation />
       
       <div className="pt-40 pb-24 container mx-auto px-4">
@@ -193,7 +194,7 @@ export default function EnrollPage() {
             <span>in Calgary, Alberta</span>
           </div>
           <div className="text-foreground/30 text-xs">
-            © 2025 Calgary DayHome Connect. All Rights Reserved.
+            © 2026 Calgary DayHome Connect. All Rights Reserved.
           </div>
         </div>
       </footer>

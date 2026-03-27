@@ -10,7 +10,7 @@ import { Heart } from 'lucide-react'
 
 export default function Home() {
   return (
-    <main className="min-h-screen selection:bg-primary/30">
+    <main className="min-h-screen selection:bg-primary/30 overflow-x-hidden">
       <Navigation />
       
       <div className="space-y-0">
@@ -31,7 +31,7 @@ export default function Home() {
             <span>in Calgary, Alberta</span>
           </div>
           <div className="text-foreground/30 text-xs">
-            © 2025 Calgary DayHome Connect. All Rights Reserved.
+            © 2026 Calgary DayHome Connect. All Rights Reserved.
           </div>
         </div>
       </footer>
