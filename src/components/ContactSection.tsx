@@ -1,4 +1,3 @@
-
 "use client"
 
 import { useState } from 'react'
@@ -17,7 +16,8 @@ export function ContactSection() {
     e.preventDefault()
     setIsSubmitting(true)
 
-    const formData = new FormData(e.currentTarget)
+    const form = e.currentTarget
+    const formData = new FormData(form)
     
     const templateParams = {
       parent_name: formData.get('parentName'),
@@ -25,7 +25,6 @@ export function ContactSection() {
       child_age: formData.get('childAge'),
       start_date: formData.get('startDate'),
       message: formData.get('message'),
-      // Prepending sender info as requested
       sender_header: `INQUIRY FROM: ${formData.get('parentName')} <${formData.get('email')}>`,
     }
 
@@ -42,7 +41,7 @@ export function ContactSection() {
           title: "Inquiry Sent!",
           description: "We've received your message and will get back to you shortly.",
         })
-        e.currentTarget.reset()
+        form.reset()
       } else {
         throw new Error('EmailJS submission failed')
       }
@@ -63,7 +62,6 @@ export function ContactSection() {
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
           
-          {/* Contact Info */}
           <div>
             <h2 className="font-headline text-3xl md:text-4xl text-primary mb-6">Contact Us</h2>
             <p className="text-foreground/70 mb-10 text-lg">
@@ -112,7 +110,6 @@ export function ContactSection() {
               </div>
             </div>
 
-            {/* Placeholder Map */}
             <div className="mt-12 rounded-3xl overflow-hidden h-64 bg-muted relative border-4 border-white shadow-xl rotate-[-1deg]">
               <div className="absolute inset-0 flex items-center justify-center bg-primary/5 text-primary/40 p-8 text-center italic">
                 Interactive Map: SW Calgary Community Area
@@ -120,7 +117,6 @@ export function ContactSection() {
             </div>
           </div>
 
-          {/* Contact Form */}
           <div className="bg-background rounded-[3rem] p-8 md:p-12 shadow-sm border-2 border-primary/10 relative">
              <div className="absolute -top-6 -right-6 w-16 h-16 bg-yellow rounded-full z-[-1]"></div>
              <div className="absolute -bottom-6 -left-6 w-24 h-24 bg-teal/20 rounded-full z-[-1]"></div>

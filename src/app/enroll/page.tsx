@@ -1,4 +1,3 @@
-
 "use client"
 
 import { useState } from 'react'
@@ -25,10 +24,9 @@ export default function EnrollPage() {
     e.preventDefault()
     setIsSubmitting(true)
 
-    const formData = new FormData(e.currentTarget)
+    const form = e.currentTarget
+    const formData = new FormData(form)
     
-    // Prepare template params for EmailJS
-    // Note: Variable names here should match your EmailJS template placeholders
     const templateParams = {
       parent_name: formData.get('parentName'),
       parent_email: formData.get('email'),
@@ -39,7 +37,6 @@ export default function EnrollPage() {
       start_date: formData.get('startDate'),
       care_type: careType,
       message: formData.get('message'),
-      // As requested: including sender name and email clearly
       sender_header: `FROM: ${formData.get('parentName')} <${formData.get('email')}>`,
     }
 
@@ -56,7 +53,7 @@ export default function EnrollPage() {
           title: "Inquiry Sent!",
           description: "We've received your enrollment request via EmailJS. We'll be in touch soon!",
         })
-        e.currentTarget.reset()
+        form.reset()
       } else {
         throw new Error('EmailJS returned a non-200 status')
       }
@@ -105,7 +102,6 @@ export default function EnrollPage() {
 
              <CardContent className="p-8 md:p-12">
                 <form onSubmit={handleSubmit} className="space-y-8">
-                  {/* Parent Information */}
                   <div className="space-y-6">
                     <h3 className="font-headline text-xl text-secondary flex items-center gap-2">
                       <Heart size={20} className="fill-secondary" />
@@ -140,7 +136,6 @@ export default function EnrollPage() {
                     </div>
                   </div>
 
-                  {/* Child Information */}
                   <div className="space-y-6 pt-4">
                     <h3 className="font-headline text-xl text-yellow flex items-center gap-2">
                       <Sparkles size={20} className="fill-yellow" />
@@ -176,7 +171,6 @@ export default function EnrollPage() {
                     </div>
                   </div>
 
-                  {/* Additional Info */}
                   <div className="space-y-4 pt-4">
                     <Label htmlFor="message" className="font-bold ml-1">Additional Information or Questions</Label>
                     <Textarea 
