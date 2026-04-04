@@ -13,7 +13,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Heart, ArrowLeft, Star, Sparkles } from 'lucide-react'
 import Link from 'next/link'
 import { useToast } from '@/hooks/use-toast'
-import { submitEnrollmentAction } from '@/app/actions/enroll'
+import emailjs from '@emailjs/browser'
 
 export default function EnrollPage() {
   const { toast } = useToast()
@@ -26,27 +26,49 @@ export default function EnrollPage() {
     setIsSubmitting(true)
 
     const formData = new FormData(e.currentTarget)
-    // Add select values manually since Radix Select doesn't use native name attribute easily
-    formData.append('preferredContact', preferredContact)
-    formData.append('careType', careType)
+    
+    // Prepare template params for EmailJS
+    // Note: Variable names here should match your EmailJS template placeholders
+    const templateParams = {
+      parent_name: formData.get('parentName'),
+      parent_email: formData.get('email'),
+      phone: formData.get('phone'),
+      preferred_contact: preferredContact,
+      child_name: formData.get('childName'),
+      child_age: formData.get('childAge'),
+      start_date: formData.get('startDate'),
+      care_type: careType,
+      message: formData.get('message'),
+      // As requested: including sender name and email clearly
+      sender_header: `FROM: ${formData.get('parentName')} <${formData.get('email')}>`,
+    }
 
-    const result = await submitEnrollmentAction(formData)
+    try {
+      const result = await emailjs.send(
+        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || '',
+        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || '',
+        templateParams,
+        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || ''
+      )
 
-    setIsSubmitting(false)
-
-    if (result.success) {
-      toast({
-        title: "Inquiry Sent!",
-        description: "We've received your enrollment request. We'll be in touch soon!",
-      })
-      // Optional: Reset form or redirect
-      e.currentTarget.reset()
-    } else {
+      if (result.status === 200) {
+        toast({
+          title: "Inquiry Sent!",
+          description: "We've received your enrollment request via EmailJS. We'll be in touch soon!",
+        })
+        e.currentTarget.reset()
+      } else {
+        throw new Error('EmailJS returned a non-200 status')
+      }
+    } catch (error: any) {
+      console.error('EmailJS Error:', error)
       toast({
         variant: "destructive",
         title: "Submission Failed",
-        description: result.error || "There was a problem sending your inquiry. Please try again.",
+        description: "There was a problem sending your inquiry. Please ensure your EmailJS keys are set correctly in .env",
       })
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
