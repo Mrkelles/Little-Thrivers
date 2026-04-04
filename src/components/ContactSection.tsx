@@ -1,12 +1,63 @@
 
 "use client"
 
-import { Phone, Mail, MapPin, Clock } from 'lucide-react'
+import { useState } from 'react'
+import { Phone, Mail, MapPin, Clock, Loader2, Send } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
+import { useToast } from '@/hooks/use-toast'
+import emailjs from '@emailjs/browser'
 
 export function ContactSection() {
+  const { toast } = useToast()
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+
+    const formData = new FormData(e.currentTarget)
+    
+    const templateParams = {
+      parent_name: formData.get('parentName'),
+      parent_email: formData.get('email'),
+      child_age: formData.get('childAge'),
+      start_date: formData.get('startDate'),
+      message: formData.get('message'),
+      // Prepending sender info as requested
+      sender_header: `INQUIRY FROM: ${formData.get('parentName')} <${formData.get('email')}>`,
+    }
+
+    try {
+      const result = await emailjs.send(
+        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || '',
+        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || '',
+        templateParams,
+        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || ''
+      )
+
+      if (result.status === 200) {
+        toast({
+          title: "Inquiry Sent!",
+          description: "We've received your message and will get back to you shortly.",
+        })
+        e.currentTarget.reset()
+      } else {
+        throw new Error('EmailJS submission failed')
+      }
+    } catch (error) {
+      console.error('EmailJS Error:', error)
+      toast({
+        variant: "destructive",
+        title: "Submission Error",
+        description: "We couldn't send your message. Please check your connection and try again.",
+      })
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
   return (
     <section id="contact" className="py-24 bg-white relative overflow-hidden">
       <div className="container mx-auto px-4">
@@ -75,31 +126,45 @@ export function ContactSection() {
              <div className="absolute -bottom-6 -left-6 w-24 h-24 bg-teal/20 rounded-full z-[-1]"></div>
              
              <h3 className="font-headline text-2xl mb-8">Send an Inquiry</h3>
-             <form className="space-y-4">
+             <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <label className="text-sm font-bold pl-2">Parent Name</label>
-                    <Input placeholder="Your full name" className="rounded-2xl h-12 border-primary/10 focus-visible:ring-primary" />
+                    <Input name="parentName" required placeholder="Your full name" className="rounded-2xl h-12 border-primary/10 focus-visible:ring-primary" />
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-bold pl-2">Email Address</label>
-                    <Input type="email" placeholder="email@example.com" className="rounded-2xl h-12 border-primary/10 focus-visible:ring-primary" />
+                    <Input name="email" type="email" required placeholder="email@example.com" className="rounded-2xl h-12 border-primary/10 focus-visible:ring-primary" />
                   </div>
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-bold pl-2">Child's Age</label>
-                  <Input placeholder="e.g. 2 years old" className="rounded-2xl h-12 border-primary/10 focus-visible:ring-primary" />
+                  <Input name="childAge" required placeholder="e.g. 2 years old" className="rounded-2xl h-12 border-primary/10 focus-visible:ring-primary" />
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-bold pl-2">Desired Start Date</label>
-                  <Input type="date" className="rounded-2xl h-12 border-primary/10 focus-visible:ring-primary" />
+                  <Input name="startDate" type="date" required className="rounded-2xl h-12 border-primary/10 focus-visible:ring-primary" />
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-bold pl-2">Message</label>
-                  <Textarea placeholder="Tell us about your child's needs or any questions you have..." className="rounded-2xl min-h-[120px] border-primary/10 focus-visible:ring-primary" />
+                  <Textarea name="message" required placeholder="Tell us about your child's needs or any questions you have..." className="rounded-2xl min-h-[120px] border-primary/10 focus-visible:ring-primary" />
                 </div>
-                <Button className="w-full h-14 rounded-full bg-primary hover:bg-primary/90 text-white font-bold text-lg shadow-lg">
-                  Submit Inquiry
+                <Button 
+                  type="submit" 
+                  disabled={isSubmitting}
+                  className="w-full h-14 rounded-full bg-primary hover:bg-primary/90 text-white font-bold text-lg shadow-lg"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="mr-2 animate-spin" />
+                      Sending...
+                    </>
+                  ) : (
+                    <>
+                      <Send className="mr-2" size={18} />
+                      Submit Inquiry
+                    </>
+                  )}
                 </Button>
              </form>
           </div>
